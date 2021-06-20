@@ -20,5 +20,77 @@ BEGIN
         INNER JOIN Puestos p on p.IdPuestos = e.IdPuesto
 END
 GO
+
+TRUNCATE TABLE dbo.Empleados
 --Ejecutar procedimineto
 EXEC SP_SeleccionarTodosLosEmpleados
+
+--Procedimineto para agregar un nuevo empleado
+IF EXISTS (
+SELECT *
+FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'SP_InsertEmpleado'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.SP_InsertEmpleado
+GO
+CREATE PROCEDURE dbo.SP_InsertEmpleado
+    @Nombre VARCHAR(50),
+    @Direccion VARCHAR(60),
+    @Sexo INT,
+    @Puesto INT,
+    @Departmento VARCHAR(50)
+AS
+BEGIN
+    INSERT INTO  Empleados
+    VALUES
+        (@Nombre, @Direccion, @Sexo, @Puesto, @Departmento)
+
+    --Procedimineto alamcenado para eliminar empleados
+
+    IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+    WHERE SPECIFIC_SCHEMA = N'dbo'
+        AND SPECIFIC_NAME = N'SP_EliminarEmpleado'
+        AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.SP_EliminarEmpleado
+GO
+CREATE PROCEDURE dbo.SP_EliminarEmpleado
+    @IdEmpleado INT
+AS
+BEGIN
+    delete dbo.Empleados
+    WHERE IdEmpleado = @IdEmpleado
+END
+GO
+-- example to execute the stored procedure we just created
+EXECUTE dbo.SP_EliminarEmpleado @IdEmpleado = 2
+GO
+
+--Procedimientto almacenado para eliminar empleados
+
+IF EXISTS (
+SELECT *
+FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'SP_ActualizarEmpleados'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.SP_ActualizarEmpleados
+GO
+CREATE PROCEDURE dbo.SP_ActualizarEmpleados
+    @IdEmpleado INT,
+    @Nombre VARCHAR(50),
+    @Direccion VARCHAR(60),
+    @Sexo INT,
+    @Puesto INT,
+    @Departmento VARCHAR(50)
+AS
+BEGIN
+--UPDATE dbo.Empleados SET nombre = @Nombre, direccion = @Direccion, Idsexo = @Sexo,IdPuesto = @Puesto, Departamento = @Departmento
+--WHERE IdEmpleado = @IdEmpleado
+--END
+--GO

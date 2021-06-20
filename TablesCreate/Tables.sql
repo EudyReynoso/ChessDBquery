@@ -9,6 +9,7 @@ CREATE DATABASE ChessDB
 GO
 
 USE ChessDB
+
 --Tabla Sexo
 CREATE TABLE Sexo
 (
